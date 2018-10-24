@@ -835,6 +835,50 @@ Supported configuration settings are:
 ingestion service). |
 | `serviceDomain` | string | No | Specifies the domain for your OMS workspace. Default value is "ods.opinsights.azure.com", for Azure Commercial.
 
+#### Dynatrace 
+
+*Nuget package*: [**Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace**](https://www.nuget.org/packages/Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace/)
+
+The Dynatrace output writes data to [Dynatrace](https://www.dynatrace.com) tenants. You will need to create a Dynatrace account and know its tenant and api-token before using Dynatrace output. Here is a sample configuration fragment enabling the output:
+```json
+{
+
+    "type": "Dynatrace",
+    "APIToken": "<YOUR API TOKEN>",
+    "ServiceBaseAddress": "https://<YOUR-TENANT-ID>.live.dynatrace.com",
+    "ServiceAPIEndpoint": "/api/",
+    "MonitoredEntity": {
+        "entityAlias": "azure-metadata",
+        "displayName": "ServiceFabric Node",
+        "type": "ServiceFabric",
+        "ipAddresses": [ "azure-metadata" ],
+        "listenPorts": [ "9999" ],
+        "tags": [ "ServiceFabric" ],
+        "configUrl": "http://localhost:19080",
+        "favicon": "https://assets.dynatrace.com/global/icons/white/icons_technologies_003_microsoft-azure-fabric.png",
+    }, 
+    "Timeseries": {
+        "timeseriesID": "servicefabric.events",
+        "displayName": "ServiceFabric Events",
+        "unit": "Count",
+        "dimensions": [ "channel", "event" ],
+        "types": [ "ServiceFabric" ]
+    }
+}
+```
+
+Supported configuration settings are:
+
+| Field | Values/Types | Required | Description |
+| :---- | :-------------- | :------: | :---------- |
+| `type` | "Dynatrace" | Yes | Specifies the output type. For this output, it must be "Dynatrace". |
+| `APIToken` | string (GUID) | Yes | Specifies the Dynatrace API Token |
+| `ServiceBaseAddress` | string | Yes | Specifies the API base address for your tenant |
+| `entityAlias` | string | Yes | Either a custom name or in case of Azure Virtual Machine "azure-metadata" to capture the name from the Azure VM |
+| `ipAddresses` | string | Yes | Either the entities ip-adress(es) or in case of Azure Virtual Machine "azure-metadata" to retrieve the ip-addresses from the Azure VM |
+| `listenPorts` | string | Yes | Ports used by the servicefabric services |
+| `configUrl` | string | true | Should be the endpoint of ServiceFabric Explorer |
+
 ### Filters
 As data comes through the EventFlow pipeline, the application can add extra processing or tagging to them. These optional operations are accomplished with filters. Filters can transform, drop, or tag data with extra metadata, with rules based on custom expressions.
 With metadata tags, filters and outputs operating further down the pipeline can apply different processing for different data. For example, an output component can choose to send only data with a certain tag. Each filter type has its own set of parameters.
@@ -1358,6 +1402,7 @@ The following table lists platform support for standard inputs and outputs.
 | [Azure EventHub](#event-hub) | Yes | Yes | Yes |
 | [Elasticsearch](#elasticsearch) | Yes | Yes | Yes |
 | [OMS (Operations Management Suite)](#oms-operations-management-suite) | Yes | Yes | Yes |
+| [Dynatrace](#dynatrace) | Yes | Yes | Yes |
 
 ## Contributions
 Refer to [contribution guide](contributing.md).
