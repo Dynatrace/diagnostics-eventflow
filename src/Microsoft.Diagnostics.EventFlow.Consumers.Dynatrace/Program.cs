@@ -2,8 +2,6 @@
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 //  Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
 // ------------------------------------------------------------
-using InfluxDB.Collector;
-using InfluxDB.Collector.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,30 +13,7 @@ namespace Microsoft.Diagnostics.EventFlow.Consumers.ConsoleApp
     {
         static void Main(string[] args)
         {
-            //Metrics.Collector = new CollectorConfiguration()
-            //    .Tag.With("test", "Microsoft.Diagnostics.EventFlow.Consumers.Dynatrace")
-            //    .Batch.AtInterval(TimeSpan.FromSeconds(2))
-            //    .WriteTo.InfluxDB("http://localhost:8086", "influx")
-            //    .CreateCollector();
-
-            //CollectorLog.RegisterErrorHandler((message, exception) =>
-            //{
-            //    Console.WriteLine($"{message}: {exception}");
-            //});
-
-            //Metrics.Increment("executions");
-
-            /*
-            Metrics.Write("cpu_time",
-                new Dictionary<string, object>
-                {
-                    { "value", process.TotalProcessorTime.TotalMilliseconds },
-                    { "user", process.UserProcessorTime.TotalMilliseconds }
-                });
-
-            Metrics.Measure("working_set", process.WorkingSet64);
-            */
-
+          
             using (DiagnosticPipeline pipeline = DiagnosticPipelineFactory.CreatePipeline("eventFlowConfig.json"))
             {
                 
@@ -55,9 +30,9 @@ namespace Microsoft.Diagnostics.EventFlow.Consumers.ConsoleApp
                 client.GetStringAsync("http://www.bing.com").Wait();
 
                 // Check the result
-                //Console.WriteLine("Press any key to continue . . .");
+                Console.WriteLine("Press any key to continue . . .");
                 Console.ReadKey(true);
-                System.Threading.Thread.Sleep(2000);
+                
             }
         }
     }
