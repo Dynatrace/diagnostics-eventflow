@@ -1,0 +1,113 @@
+﻿{
+  "healthReporter": {
+    "type": "CsvHealthReporter",
+    "logFileFolder": ".",
+    "logFilePrefix": "HealthReport",
+    "minReportLevel": "Warning",
+    "throttlingPeriodMsec": "1000"
+  },
+  "inputs": [
+    //{
+    //  "type": "EventSource",
+    //  "sources": [
+    //    { "providerName": "MyEventSource" },
+    //    { "providerName": "System.Diagnostics.Eventing.FrameworkEventSource" }
+    //    //{
+    //    //    "providerName": "MyEventSource",
+    //    //    "level": "Informational",
+    //    //    "keywords": "0x7F"
+    //    //}
+    //  ]
+    //},
+    //{
+    //  "type": "PerformanceCounter",
+    //  "counters": [
+    //    {
+    //      "counterCategory": "Process",
+    //      "counterName": "% Processor Time"
+    //    },
+    //    {
+    //      "counterCategory": "Process",
+    //      "counterName": "Private Bytes"
+    //    },
+    //    {
+    //      "counterCategory": ".NET CLR Memory",
+    //      "counterName": "% Time in GC"
+    //    },
+    //    {
+    //      "counterCategory": "Process",
+    //      "counterName": "# of Exceps Thrown / sec"
+    //    }
+    //  ]
+    //},
+    //{
+    //  "type": "Trace",
+    //  "traceLevel":  "Verbose"
+    //}
+    {
+      "type": "ETW",
+      "providers": [
+        {
+          "providerName": "Microsoft-ServiceFabric" 
+        }
+
+      ]
+    }
+  ],
+
+  "filters": [
+    {
+      "type": "drop",
+      "include": "Level == Verbose"
+    },
+    {
+      "type": "drop",
+      "include": "EventName!=CM && EventName!=HM "
+    }
+
+  ],
+
+  "outputs": [
+   /*
+    {
+      "type": "StdOutput"
+    } ,
+   */
+    {
+
+      "type": "Dynatrace",
+      "APIToken": "<XXXXXXX>",
+      "ServiceBaseAddress": "https://<XXXXXX>.live.dynatrace.com",
+      "ServiceAPIEndpoint": "/api/",
+      "MonitoredEntity": {
+        "entityAlias": "azure-metadata",
+        "displayName": "ServiceFabric Node",
+        "type": "ServiceFabric",
+        "ipAddresses": [ "azure-metadata" ],
+        "listenPorts": [ "9999" ],
+        "tags": [ "ServiceFabric" ],
+        "configUrl": "http://localhost:19080",
+        "favicon": "https://assets.dynatrace.com/global/icons/white/icons_technologies_003_microsoft-azure-fabric.png"
+      },
+      "Timeseries": {
+        "timeseriesID": "servicefabric.events",
+        "displayName": "ServiceFabric Events",
+        "unit": "Count",
+        "dimensions": [ "channel", "event" ],
+        "types": [ "ServiceFabric" ]
+      }
+    }
+  ],
+  "settings": {
+    "maxEventBatchSize": "50"
+  },
+
+  "schema-version": "2016-08-11",
+  "extensions": [
+    {
+      "category": "outputFactory",
+      "type": "Dynatrace",
+      "qualifiedTypeName": "Microsoft.Diagnostics.EventFlow.Outputs.DynatraceOutputFactory,  Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace"
+    }
+  ]
+}
