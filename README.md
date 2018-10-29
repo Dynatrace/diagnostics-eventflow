@@ -878,6 +878,25 @@ Supported configuration settings are:
 | `ipAddresses` | string | Yes | Either the entities ip-adress(es) or in case of Azure Virtual Machine "azure-metadata" to retrieve the ip-addresses from the Azure VM |
 | `listenPorts` | string | Yes | Ports used by the servicefabric services |
 | `configUrl` | string | true | Should be the endpoint of ServiceFabric Explorer |
+| `Timeseries` | object | false | If defined, event statistics are tracked as a custom timeseries based on "ProviderName" and "Event-ID" |
+
+For more information about how to use Metrics in Dynatrace see [**Dynatrace Device Metrics**](https://www.dynatrace.com/support/help/dynatrace-api/environment/timeseries-api/manage-custom-metrics-via-api/)
+
+
+*Metadata support*
+
+Dynatrace output supports the standard "metric" metadata. 
+Additionally the "dynatrace-event" metadata type is available to customize how the event is sent to dynatrace. 
+
+| Field | Values/Types | Required | Description |
+| :---- | :-------------- | :------: | :---------- |
+| `metadata` | "dynatrace-event" | false | Indicates Dynatrace event metadata; must be "dynatrace-event". |
+| `source` | string | false | Overrides the "source" property of the event (default is "eventflow") |
+| `eventType` | string | false | Overrides the "eventType" property of the event (default is "CUSTOM_ANNOTATION") |
+| `annotationType` | string | false | Overrides the "annotationType" property of the event (default is "{eventName} - {eventID}") |
+| `annotationDescription` | string | false | Overrides the "annotationDescription" property of the event (default is "{eventMessage}") |
+
+For more information about how to use the event properties see [**Dynatrace Event API**](https://www.dynatrace.com/support/help/shortlink/api-events#events-post-parameter-eventpushmessage)
 
 ### Filters
 As data comes through the EventFlow pipeline, the application can add extra processing or tagging to them. These optional operations are accomplished with filters. Filters can transform, drop, or tag data with extra metadata, with rules based on custom expressions.
