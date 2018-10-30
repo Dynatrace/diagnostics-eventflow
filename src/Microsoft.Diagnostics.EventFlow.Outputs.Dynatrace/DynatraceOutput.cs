@@ -68,6 +68,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
             Requires.NotNull(healthReporter, nameof(healthReporter));
 
             this.healthReporter = healthReporter;
+
             Initialize(applicationInsightsOutputConfiguration);
         }
 
@@ -184,7 +185,6 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
 
         private async void InitializeCustomDevice(DynatraceOutputConfiguration cfg)
         {
-
             bool useIPMeta = dtOutputConfiguration.MonitoredEntity.ipAddresses.Contains("azure-metadata");
             bool useInstanceMeta = dtOutputConfiguration.MonitoredEntity.entityAlias == "azure-metadata";
             if (useIPMeta || useInstanceMeta)
@@ -212,15 +212,19 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                             dtOutputConfiguration.MonitoredEntity.properties.Add("resourceGroupName", (string)meta["compute"]["resourceGroupName"]);
                             dtOutputConfiguration.MonitoredEntity.properties.Add("subscriptionId", (string)meta["compute"]["subscriptionId"]);
                             dtOutputConfiguration.MonitoredEntity.properties.Add("vmId", (string)meta["compute"]["vmId"]);
-                            dtOutputConfiguration.MonitoredEntity.properties.Add("vmScaleSetName", (string)meta["compute"]["vmScaleSetName"]);
-                            dtOutputConfiguration.MonitoredEntity.properties.Add("zone", (string)meta["compute"]["zone"]);
+                            if (!string.IsNullOrEmpty((string)meta["compute"]["vmScaleSetName"]))
+                                dtOutputConfiguration.MonitoredEntity.properties.Add("vmScaleSetName", (string)meta["compute"]["vmScaleSetName"]);
+                            if (!String.IsNullOrEmpty((string)meta["compute"]["zone"]))
+                                dtOutputConfiguration.MonitoredEntity.properties.Add("zone", (string)meta["compute"]["zone"]);
                         }
                         if (useIPMeta)
                         {
-                            dtOutputConfiguration.MonitoredEntity.ipAddresses = new string[]{
-                                (string)meta["network"]["interface"][0]["ipv4"]["ipAddress"][0]["privateIpAddress"],
-                                (string)meta["network"]["interface"][0]["ipv4"]["ipAddress"][0]["publicIpAddress"],
-                            };
+                                List<string> ip = new List<string>();
+                                ip.Add((string)meta["network"]["interface"][0]["ipv4"]["ipAddress"][0]["privateIpAddress"]);
+                                if (!String.IsNullOrEmpty((string)meta["network"]["interface"][0]["ipv4"]["ipAddress"][0]["publicIpAddress"]))
+                                    ip.Add((string)meta["network"]["interface"][0]["ipv4"]["ipAddress"][0]["publicIpAddress"]);
+
+                                dtOutputConfiguration.MonitoredEntity.ipAddresses = ip.ToArray();
                         }
 
                     }
@@ -241,7 +245,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
         {
 
             var httpContent = new StringContent(JsonConvert.SerializeObject(metric), Encoding.UTF8, "application/json");
-
+            
             var url = TimeSeriesEndoint + "custom:" + metricID;
             
             try
