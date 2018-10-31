@@ -62,55 +62,67 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
             meta.TagMatchValue = eventMetadata["tagMatchValue"];
 
             string val = "";
-            if (!string.IsNullOrEmpty(eventMetadata["annotationTypeProperty"]))
+            string property = eventMetadata["annotationTypeProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("annotationTypeProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.AnnotationType = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["annotationDescriptionProperty"]))
+            property = eventMetadata["annotationDescriptionProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("annotationDescriptionProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.AnnotationDescription = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["descriptionProperty"]))
+            property = eventMetadata["descriptionProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("descriptionProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.Description = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["deploymentNameProperty"]))
+
+            property = eventMetadata["deploymentNameProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("deploymentNameProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.DeploymentName = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["deploymentVersionProperty"]))
+            property = eventMetadata["deploymentVersionProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("deploymentVersionProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.DeploymentVersion = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["configuratonProperty"]))
+            property = eventMetadata["configuratonProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("configuratonProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.DeploymentVersion = val;
             }
 
-            if (!string.IsNullOrEmpty(eventMetadata["tagMatchEntityTypeProperty"]))
+            property = eventMetadata["tagMatchEntityTypeProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("tagMatchEntityTypeProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.TagMatchEntityType = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["tagMatchContextProperty"]))
+
+            property = eventMetadata["tagMatchContextProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("tagMatchContextProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.TagMatchContext = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["tagMatchKeyProperty"]))
+            property = eventMetadata["tagMatchKeyProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("tagMatchKeyProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.TagMatchKey = val;
             }
-            if (!string.IsNullOrEmpty(eventMetadata["tagMatchValueProperty"]))
+            property = eventMetadata["tagMatchValueProperty"];
+            if (!string.IsNullOrEmpty(property))
             {
-                if (eventData.GetValueFromPayload<string>("tagMatchValueProperty", (v) => val = v))
+                if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.TagMatchValue = val;
             }
             return DataRetrievalResult.Success;
