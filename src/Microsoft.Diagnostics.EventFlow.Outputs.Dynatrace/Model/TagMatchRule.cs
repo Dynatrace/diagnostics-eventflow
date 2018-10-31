@@ -5,11 +5,10 @@ using System.Text;
 
 namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
 {
-    public class PushEventAttachRules
+    public class TagMatchRule
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string[] entityIds { get; set;}
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public TagMatchRule[] tagRule { get; set; }
+        public string[] meTypes { get; set; }
+        public TagInfo[] tags { get; set; }
     }
 }

@@ -22,5 +22,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
         public string deploymentName { get; set;}
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string deploymentVersion { get; set;}
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string configuration { get; set; }
     }
 }

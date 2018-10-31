@@ -13,18 +13,20 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
     {
         public static readonly string MetadataKind = "dynatrace-event";
 
+        public string TagMatchEntityType { get; private set; }
+        public string TagMatchContext { get; private set; }
+        public string TagMatchKey { get; private set; }
+        public string TagMatchValue { get; private set; }
+        
+
         public string Source { get; private set; }
         public string EventType { get; private set; }
         public string AnnotationType { get; private set; }
-        public string AnnotationTypeProperty { get; private set; }
         public string AnnotationDescription { get; private set; }
-        public string AnnotationDescriptionProperty { get; private set; }
         public string Description { get; private set; }
-        public string DescriptionProperty { get; private set; }
         public string DeploymentName { get; private set; }
-        public string DeploymentNameProperty { get; private set; }
         public string DeploymentVersion { get; private set; }
-        public string DeploymentVersionProperty { get; private set; }
+        public string Configuration { get; private set; }
 
         // Ensure that DynatraceEventData can only be created using TryGetData() method
         private DynatraceEventData() { }
@@ -52,6 +54,12 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
             meta.Description = eventMetadata["description"];
             meta.DeploymentName = eventMetadata["deploymentName"];
             meta.DeploymentVersion = eventMetadata["deploymentVersion"];
+            meta.Configuration = eventMetadata["configuration"];
+
+            meta.TagMatchEntityType = eventMetadata["tagMatchEntityType"];
+            meta.TagMatchContext = eventMetadata["tagMatchContext"];
+            meta.TagMatchKey = eventMetadata["tagMatchKey"];
+            meta.TagMatchValue = eventMetadata["tagMatchValue"];
 
             string val = "";
             if (!string.IsNullOrEmpty(eventMetadata["annotationTypeProperty"]))
@@ -79,7 +87,32 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
                 if (eventData.GetValueFromPayload<string>("deploymentVersionProperty", (v) => val = v))
                     meta.DeploymentVersion = val;
             }
+            if (!string.IsNullOrEmpty(eventMetadata["configuratonProperty"]))
+            {
+                if (eventData.GetValueFromPayload<string>("configuratonProperty", (v) => val = v))
+                    meta.DeploymentVersion = val;
+            }
 
+            if (!string.IsNullOrEmpty(eventMetadata["tagMatchEntityTypeProperty"]))
+            {
+                if (eventData.GetValueFromPayload<string>("tagMatchEntityTypeProperty", (v) => val = v))
+                    meta.TagMatchEntityType = val;
+            }
+            if (!string.IsNullOrEmpty(eventMetadata["tagMatchContextProperty"]))
+            {
+                if (eventData.GetValueFromPayload<string>("tagMatchContextProperty", (v) => val = v))
+                    meta.TagMatchContext = val;
+            }
+            if (!string.IsNullOrEmpty(eventMetadata["tagMatchKeyProperty"]))
+            {
+                if (eventData.GetValueFromPayload<string>("tagMatchKeyProperty", (v) => val = v))
+                    meta.TagMatchKey = val;
+            }
+            if (!string.IsNullOrEmpty(eventMetadata["tagMatchValueProperty"]))
+            {
+                if (eventData.GetValueFromPayload<string>("tagMatchValueProperty", (v) => val = v))
+                    meta.TagMatchValue = val;
+            }
             return DataRetrievalResult.Success;
         }        
     }
