@@ -7,12 +7,14 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
 
     public class MonitoredEntityConfig: MonitoredEntity
     {
+        public string resolveFromTag { get; set; }
         public string entityAlias { get; set; }
     
         public MonitoredEntityConfig()
         { }
         public MonitoredEntityConfig(MonitoredEntityConfig entity)
         {
+            resolveFromTag = entity.resolveFromTag;
             entityAlias = entity.entityAlias;
             displayName = entity.displayName;
             if (entity.ipAddresses != null)
