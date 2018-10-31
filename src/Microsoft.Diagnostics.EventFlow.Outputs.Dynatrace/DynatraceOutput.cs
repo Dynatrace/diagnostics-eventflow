@@ -62,14 +62,14 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
             Initialize(dtOutputConfiguration);
         }
 
-        public DynatraceOutput(DynatraceOutputConfiguration applicationInsightsOutputConfiguration, IHealthReporter healthReporter)
+        public DynatraceOutput(DynatraceOutputConfiguration outputConfiguration, IHealthReporter healthReporter)
         {
-            Requires.NotNull(applicationInsightsOutputConfiguration, nameof(applicationInsightsOutputConfiguration));
+            Requires.NotNull(outputConfiguration, nameof(outputConfiguration));
             Requires.NotNull(healthReporter, nameof(healthReporter));
 
             this.healthReporter = healthReporter;
 
-            Initialize(applicationInsightsOutputConfiguration);
+            Initialize(outputConfiguration);
         }
 
         public async Task SendEventsAsync(IReadOnlyCollection<EventData> events, long transmissionSequenceNumber, CancellationToken cancellationToken)
@@ -134,7 +134,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
             return;
         }
 
-        private async void Initialize(DynatraceOutputConfiguration dtOutputConfiguration)
+        private void Initialize(DynatraceOutputConfiguration dtOutputConfiguration)
         {
             Debug.Assert(dtOutputConfiguration != null);
             Debug.Assert(this.healthReporter != null);
