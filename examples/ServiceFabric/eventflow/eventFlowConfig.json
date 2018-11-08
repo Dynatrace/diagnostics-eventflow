@@ -59,7 +59,8 @@
           "include": "ID== 18603  || ID == 18604 || ID == 18603",
           "tagMatchContext": "CONTEXTLESS",
           "tagMatchEntityType": "HOST",
-          "tagMatchKeyProperty": "nodeName"
+          "tagMatchKey": "SFNode",
+          "tagMatchValueProperty": "nodeName"
         }
       ],
 
