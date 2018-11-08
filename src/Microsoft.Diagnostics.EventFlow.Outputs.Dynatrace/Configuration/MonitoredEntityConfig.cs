@@ -7,13 +7,18 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
 
     public class MonitoredEntityConfig: MonitoredEntity
     {
+        public string resolveFromTag { get; set; }
         public string entityAlias { get; set; }
+        public TimeseriesConfig TimeSeries { get; set; }
     
         public MonitoredEntityConfig()
         { }
         public MonitoredEntityConfig(MonitoredEntityConfig entity)
         {
+            resolveFromTag = entity.resolveFromTag;
             entityAlias = entity.entityAlias;
+            TimeSeries = new TimeseriesConfig(entity.TimeSeries);
+
             displayName = entity.displayName;
             if (entity.ipAddresses != null)
                 ipAddresses = entity.ipAddresses.Clone() as string[];

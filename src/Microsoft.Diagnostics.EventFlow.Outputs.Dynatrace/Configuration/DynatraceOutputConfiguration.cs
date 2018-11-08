@@ -17,7 +17,7 @@ namespace Microsoft.Diagnostics.EventFlow.Configuration
         public string APIToken { get; set; }
 
         public MonitoredEntityConfig MonitoredEntity { get; set;}
-        public TimeseriesConfig TimeSeries { get; set; }
+       
         public DynatraceOutputConfiguration()
         {
             
@@ -30,9 +30,7 @@ namespace Microsoft.Diagnostics.EventFlow.Configuration
                 ServiceBaseAddress = this.ServiceBaseAddress,
                 ServiceAPIEndpoint = this.ServiceAPIEndpoint,
                 APIToken = this.APIToken,
-                MonitoredEntity = new MonitoredEntityConfig(this.MonitoredEntity),
-                TimeSeries =new TimeseriesConfig(this.TimeSeries)
-
+                MonitoredEntity = new MonitoredEntityConfig(this.MonitoredEntity)
             };
 
             return deepCopy;

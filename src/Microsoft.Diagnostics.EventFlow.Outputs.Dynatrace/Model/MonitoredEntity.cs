@@ -8,8 +8,11 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
    
     public class MonitoredEntity
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string displayName { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string[] ipAddresses { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string[] listenPorts { get; set; }
         public string type { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

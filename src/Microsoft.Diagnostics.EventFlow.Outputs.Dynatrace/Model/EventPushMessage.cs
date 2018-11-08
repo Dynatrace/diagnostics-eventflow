@@ -10,6 +10,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
         public string eventType { get; set;}
         public long start {get; set;}
         public PushEventAttachRules attachRules { get; set;}
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string source { get; set;}
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string annotationType { get; set;}
@@ -21,5 +22,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
         public string deploymentName { get; set;}
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string deploymentVersion { get; set;}
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string configuration { get; set; }
     }
 }
