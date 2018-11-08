@@ -848,22 +848,23 @@ The Dynatrace output writes data to [Dynatrace](https://www.dynatrace.com) tenan
     "ServiceBaseAddress": "https://<YOUR-TENANT-ID>.live.dynatrace.com",
     "ServiceAPIEndpoint": "/api/",
     "MonitoredEntity": {
-        "entityAlias": "azure-metadata",
-        "displayName": "ServiceFabric Node",
+        "entityAlias": "ServiceFabric Cluster",
+        "displayName": "ServiceFabric Cluster",
         "type": "ServiceFabric",
         "ipAddresses": [ "azure-metadata" ],
-        "listenPorts": [ "9999" ],
+        "listenPorts": [ "8080" ],
         "tags": [ "ServiceFabric" ],
         "configUrl": "http://localhost:19080",
         "favicon": "https://assets.dynatrace.com/global/icons/white/icons_technologies_003_microsoft-azure-fabric.png",
-    }, 
-    "Timeseries": {
-        "timeseriesID": "servicefabric.events",
-        "displayName": "ServiceFabric Events",
-        "unit": "Count",
-        "dimensions": [ "channel", "event" ],
-        "types": [ "ServiceFabric" ]
-    }
+        "Timeseries": {
+            "timeseriesID": "servicefabric.events",
+            "displayName": "ServiceFabric Events",
+            "unit": "Count",
+            "dimensions": [ "channel", "event" ],
+            "types": [ "ServiceFabric" ]
+        }
+    } 
+    
 }
 ```
 
@@ -877,7 +878,7 @@ Supported configuration settings are:
 | `entityAlias` | string | Yes | Either a custom name or in case of Azure Virtual Machine "azure-metadata" to capture the name from the Azure VM |
 | `ipAddresses` | string | Yes | Either the entities ip-adress(es) or in case of Azure Virtual Machine "azure-metadata" to retrieve the ip-addresses from the Azure VM |
 | `listenPorts` | string | Yes | Ports used by the servicefabric services |
-| `configUrl` | string | true | Should be the endpoint of ServiceFabric Explorer |
+| `configUrl` | string | true | Should be the endpoint of ServiceFabric Explorer, so Dynatrace automatically links from Dynatrace UI into SF explorer |
 | `Timeseries` | object | false | If defined, event statistics are tracked as a custom timeseries based on "ProviderName" and "Event-ID" |
 
 For more information about how to use Metrics in Dynatrace see [**Dynatrace Device Metrics**](https://www.dynatrace.com/support/help/dynatrace-api/environment/timeseries-api/manage-custom-metrics-via-api/)
@@ -894,7 +895,24 @@ Additionally the "dynatrace-event" metadata type is available to customize how t
 | `source` | string | false | Overrides the "source" property of the event (default is "eventflow") |
 | `eventType` | string | false | Overrides the "eventType" property of the event (default is "CUSTOM_ANNOTATION") |
 | `annotationType` | string | false | Overrides the "annotationType" property of the event (default is "{eventName} - {eventID}") |
+| `annotationTypeProperty` | string | false | Maps an incoming event-property to "annotationType" property  |
 | `annotationDescription` | string | false | Overrides the "annotationDescription" property of the event (default is "{eventMessage}") |
+| `annotationDescriptionProperty` | string | false | Maps an incoming event-property to "annotationDescription" property |
+| `description` | string | false | Sets the "description" property of the incoming event |
+| `descriptionProperty` | string | false | Maps an incoming event-property to "description" property  |
+| `deploymentName` | string | false | Sets the "deploymentName" property of the event
+| `deploymentNameProperty` | string | false | Maps an incoming event-property to "deploymentName" property
+| `deploymentVersion` | string | false | Sets the "deploymentVersion" property of the event
+| `deploymentVersionProperty` | string | false | Maps an incoming event-property to "deploymentVersion" property
+| `configuration` | string | false | Sets the "configuration" property of the event
+| `configurationProperty` | string | false | Maps an incoming event-property to "configuration" property
+| `tagMatchEntityType` | string | false | filters matching entities by entity-type e.g. "HOST" [read more](https://www.dynatrace.com/support/help/dynatrace-api/environment/events-api/#events-post-parameter-taginfo)
+| `tagMatchContext` | string | true | Filters matching tags by context. e.g. "CONTEXTLESS" matching entities by entity-type e.g. "HOST" [read more](https://www.dynatrace.com/support/help/dynatrace-api/environment/events-api/#events-post-parameter-enum-gWW16rUCfKLr7Ud9I1FpMA)
+| `tagMatchKey` | string | false | Sets the matching tag-key 
+| `tagMatchValue` | string | true | Sets the matching tag-value 
+| `tagMatchValueProperty` | string | true | Maps an incoming event-property to match a tag-value 
+
+
 
 For more information about how to use the event properties see [**Dynatrace Event API**](https://www.dynatrace.com/support/help/shortlink/api-events#events-post-parameter-eventpushmessage)
 
