@@ -8,8 +8,8 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
     public class TagInfo
     {
         public string context { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string key { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string value { get; set; }
 
     }

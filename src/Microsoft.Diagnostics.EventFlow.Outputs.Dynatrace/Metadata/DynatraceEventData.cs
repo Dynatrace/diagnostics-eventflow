@@ -18,6 +18,13 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
         public string TagMatchKey { get; private set; }
         public string TagMatchValue { get; private set; }
         
+        public bool HasTargetEntity
+        {
+            get
+            {
+                return (!String.IsNullOrEmpty(TagMatchEntityType) && !String.IsNullOrEmpty(TagMatchKey));
+            }
+        }
 
         public string Source { get; private set; }
         public string EventType { get; private set; }

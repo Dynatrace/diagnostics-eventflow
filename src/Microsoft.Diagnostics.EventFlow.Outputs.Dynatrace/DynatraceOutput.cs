@@ -98,14 +98,18 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                         return;
                     }
 
-                    IReadOnlyCollection<EventMetadata> metadata = null;
-                    e.TryGetMetadata(MetricData.MetricMetadataKind, out metadata);
+                    if (dtOutputConfiguration.MonitoredEntity.TimeSeries != null)
+                    {
+                        IReadOnlyCollection<EventMetadata> metricMetadata = null;
+                        e.TryGetMetadata(MetricData.MetricMetadataKind, out metricMetadata);
 
-                    if (dtOutputConfiguration.TimeSeries != null)
-                        tracked |= TrackMetric(m, e, metadata);
+                        tracked |= TrackMetric(m, e, metricMetadata);
+                    }
 
-                    e.TryGetMetadata(DynatraceEventData.MetadataKind, out metadata);
-                    tracked |= TrackEvent(m, e, metadata);
+                    IReadOnlyCollection<EventMetadata> dtMetadata = null;
+                    e.TryGetMetadata(DynatraceEventData.MetadataKind, out dtMetadata);
+
+                    tracked |= TrackEvent(e, dtMetadata);
                 }
 
                 try
@@ -179,9 +183,9 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
 
         private void InitializeMetrics(DynatraceOutputConfiguration cfg)
         {
-            if (cfg.TimeSeries != null)
+            if (cfg.MonitoredEntity.TimeSeries != null)
             {
-                InitializeMetric(cfg.TimeSeries.timeseriesId, cfg.TimeSeries as TimeseriesRegistrationMessage);
+                InitializeMetric(cfg.MonitoredEntity.TimeSeries.timeseriesId, cfg.MonitoredEntity.TimeSeries as TimeseriesRegistrationMessage);
             }
         }
 
@@ -238,7 +242,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
 
                 }
             }
-            //TODO TODO
+            
             if (!await ResolveHostEnity(cfg.MonitoredEntity.resolveFromTag, cfg.MonitoredEntity.entityAlias, dtOutputConfiguration.MonitoredEntity))
             {
                 entityID = (await CreateCustomDevice(cfg.MonitoredEntity.entityAlias, dtOutputConfiguration.MonitoredEntity)).entityId;
@@ -325,7 +329,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
 
             var ts = new EntityTimeseriesData()
             {
-                timeseriesId = "custom:" + dtOutputConfiguration.TimeSeries.timeseriesId,
+                timeseriesId = "custom:" + dtOutputConfiguration.MonitoredEntity.TimeSeries.timeseriesId,
                 dimensions = new Dictionary<string, string>()
             };
 
@@ -397,7 +401,21 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                         entityID = (string)hosts[i]["entityId"];
                         return true;
                     }
-                    //else if (false) ; //TODO match against entity properties like ip, .. 
+                    else
+                    {
+                        if (hosts[i]["ipAddresses"] != null)
+                        {
+                            for (int j = 0; j < hosts[i]["ipAddresses"].Count(); j++)
+                            {
+                                if (matchingEntity.ipAddresses.Contains((string)hosts[i]["ipAddresses"][j]))
+                                {
+                                    entityID = (string)hosts[i]["entityId"]; ;
+                                    return true;
+                                }
+                            }
+                        }
+
+                    }
                 }
                 
                 return false;
@@ -411,7 +429,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
             
 
         }
-        private bool TrackEvent(MonitoredEntityMetrics m, EventData e, IReadOnlyCollection<EventMetadata> metadata)
+        private bool TrackEvent(EventData e, IReadOnlyCollection<EventMetadata> metadata)
         {
             bool tracked = false;
 
@@ -452,7 +470,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                         continue;
                     }
 
-                    if (!String.IsNullOrEmpty(eventData.TagMatchEntityType) && !String.IsNullOrEmpty(eventData.TagMatchKey))
+                    if (eventData.HasTargetEntity)
                     {
                         msg.attachRules = new PushEventAttachRules() {
                             tagRule = new TagMatchRule[] {
@@ -513,14 +531,23 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
             else
                 StartWaitEvents = null;
 
-            var httpContent = new StringContent(JsonConvert.SerializeObject(m), Encoding.UTF8, "application/json");
-
             try
             {
+                var httpContent = new StringContent(JsonConvert.SerializeObject(m), Encoding.UTF8, "application/json");
                 var httpResponse = await restClient.PostAsync(EventEndoint, httpContent);
-                httpResponse.EnsureSuccessStatusCode();
 
-                this.healthReporter.ReportHealthy();
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    this.healthReporter.ReportHealthy();
+                }
+                else
+                {
+                    var result = httpResponse.Content.ReadAsStringAsync().Result;
+                    this.healthReporter.ReportWarning("DynatraceOutput:SendEvent failed: " + result, EventFlowContextIdentifiers.Output);
+                }
+
+                httpResponse.EnsureSuccessStatusCode();
+                
             }
             catch (Exception ex)
             {

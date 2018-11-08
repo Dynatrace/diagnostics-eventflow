@@ -9,6 +9,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
     {
         public string resolveFromTag { get; set; }
         public string entityAlias { get; set; }
+        public TimeseriesConfig TimeSeries { get; set; }
     
         public MonitoredEntityConfig()
         { }
@@ -16,6 +17,8 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.Model
         {
             resolveFromTag = entity.resolveFromTag;
             entityAlias = entity.entityAlias;
+            TimeSeries = new TimeseriesConfig(entity.TimeSeries);
+
             displayName = entity.displayName;
             if (entity.ipAddresses != null)
                 ipAddresses = entity.ipAddresses.Clone() as string[];
