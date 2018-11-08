@@ -111,6 +111,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Event
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace", "src\Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace\Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace.csproj", "{3B1F9E22-7816-4C08-AE18-E08F2BDF8E9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eventflow", "examples\ServiceFabric\eventflow\eventflow.csproj", "{88F663EE-F050-4B7C-800E-331D3B77BFD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{83AFE777-34CF-4B1B-BE92-079E6C8F7679}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceFabric", "ServiceFabric", "{58822C26-E7C2-406B-B16D-C438990E52D1}"
+EndProject
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "monitoring_service", "examples\ServiceFabric\monitoring-service\monitoring_service.sfproj", "{27949B74-9112-410F-8D23-F00BE06897F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -367,6 +375,18 @@ Global
 		{3B1F9E22-7816-4C08-AE18-E08F2BDF8E9A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B1F9E22-7816-4C08-AE18-E08F2BDF8E9A}.Release|x64.ActiveCfg = Release|Any CPU
 		{3B1F9E22-7816-4C08-AE18-E08F2BDF8E9A}.Release|x64.Build.0 = Release|Any CPU
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Debug|x64.ActiveCfg = Debug|x64
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Debug|x64.Build.0 = Debug|x64
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Release|Any CPU.ActiveCfg = Release|x64
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Release|x64.ActiveCfg = Release|x64
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0}.Release|x64.Build.0 = Release|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Debug|x64.ActiveCfg = Debug|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Debug|x64.Build.0 = Debug|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Release|Any CPU.ActiveCfg = Release|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Release|x64.ActiveCfg = Release|x64
+		{27949B74-9112-410F-8D23-F00BE06897F3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -403,6 +423,9 @@ Global
 		{B9C6A35D-D70A-4F0A-8074-6EC249B2D5B2} = {47200F40-43E1-4B09-B803-A921FED2BF05}
 		{B19F59CA-8030-40EB-BF22-6A4B1B896C37} = {47200F40-43E1-4B09-B803-A921FED2BF05}
 		{3B1F9E22-7816-4C08-AE18-E08F2BDF8E9A} = {5AD3BB0F-B6F8-4361-AC2D-CC3514DA37A0}
+		{88F663EE-F050-4B7C-800E-331D3B77BFD0} = {58822C26-E7C2-406B-B16D-C438990E52D1}
+		{58822C26-E7C2-406B-B16D-C438990E52D1} = {83AFE777-34CF-4B1B-BE92-079E6C8F7679}
+		{27949B74-9112-410F-8D23-F00BE06897F3} = {58822C26-E7C2-406B-B16D-C438990E52D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F1BC23F-956D-4D83-B675-710B743F08EF}

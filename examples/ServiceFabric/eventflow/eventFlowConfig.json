@@ -1,0 +1,98 @@
+﻿{
+  "healthReporter": {
+    "type": "CsvHealthReporter",
+    "logFileFolder": ".",
+    "logFilePrefix": "HealthReport",
+    "minReportLevel": "Warning",
+    "throttlingPeriodMsec": "1000"
+  },
+  "inputs": [
+   
+    {
+      "type": "ETW",
+      "providers": [
+
+        {
+          "providerName": "Microsoft-ServiceFabric" //includes all subsequent providers like -Events, -Actors, -Services,
+          /*
+          "level": "Warning",
+          "keywords": "1"
+            */
+
+        }
+      ]
+    }
+  ],
+
+  "filters": [
+    {
+      "type": "drop",
+      "include": "Level == Verbose"
+    },
+    {
+      "type": "metadata",
+      "metadata": "dynatrace-event",
+      "include": "ProviderName==Microsoft-ServiceFabric",
+      "source": "ETW"
+    },
+    {
+      "type": "drop",
+      "include": "ProviderName == Microsoft-ServiceFabric && (ID < 18603 || ID > 18605)" /* cluster node events only */
+    }
+
+  ],
+
+  "outputs": [
+    /*
+    {
+      "type": "StdOutput"
+    } 
+    ,
+    */
+    {
+
+      "type": "Dynatrace",
+      "filters": [
+        {
+          "type": "metadata",
+          "metadata": "dynatrace-event",
+          "include": "ID== 18603  || ID == 18604 || ID == 18603",
+          "tagMatchContext": "CONTEXTLESS",
+          "tagMatchEntityType": "HOST",
+          "tagMatchKeyProperty": "nodeName"
+        }
+      ],
+
+      "APIToken": "<API_TOKEN>",
+      "ServiceBaseAddress": "https://<ENVIRONMENT_ID>.live.dynatrace.com",
+      "ServiceAPIEndpoint": "/api/",
+      
+      "MonitoredEntity": {
+        "entityAlias": "ServiceFabric Cluster",
+        "type": "ServiceFabric",
+        "tags": [ "ServiceFabric" ],
+        "configUrl": "https://sfdemo01.westus.cloudapp.azure.com:19080",
+        "favicon": "https://assets.dynatrace.com/global/icons/white/icons_technologies_003_microsoft-azure-fabric.png",
+        "Timeseries": {
+          "timeseriesID": "servicefabric.events",
+          "displayName": "ServiceFabric Events",
+          "unit": "Count",
+          "dimensions": [ "channel", "event" ],
+          "types": [ "ServiceFabric" ]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "maxEventBatchSize": "50"
+  },
+
+  "schema-version": "2016-08-11",
+  "extensions": [
+    {
+      "category": "outputFactory",
+      "type": "Dynatrace",
+      "qualifiedTypeName": "Microsoft.Diagnostics.EventFlow.Outputs.DynatraceOutputFactory,  Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace"
+    }
+  ]
+}
