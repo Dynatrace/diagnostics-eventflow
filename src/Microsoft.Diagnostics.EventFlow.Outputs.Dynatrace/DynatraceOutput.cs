@@ -191,7 +191,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
 
         private async void InitializeCustomDevice(DynatraceOutputConfiguration cfg)
         {
-            bool useIPMeta = dtOutputConfiguration.MonitoredEntity.ipAddresses.Contains("azure-metadata");
+            bool useIPMeta = dtOutputConfiguration.MonitoredEntity.ipAddresses != null && dtOutputConfiguration.MonitoredEntity.ipAddresses.Contains("azure-metadata");
             bool useInstanceMeta = dtOutputConfiguration.MonitoredEntity.entityAlias == "azure-metadata";
             if (useIPMeta || useInstanceMeta)
             {
