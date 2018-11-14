@@ -388,33 +388,36 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
     
             try
             {
-                var httpResponse = await restClient.GetAsync(HostEntityEndoint+ "?tag=" + resolveFromTag);
-                httpResponse.EnsureSuccessStatusCode();
-
-                var resp = await httpResponse.Content.ReadAsStringAsync();
-                var hosts = JArray.Parse(resp);
-                
-                for (int i = 0; i < hosts.Count; i++)
+                if (!String.IsNullOrEmpty(resolveFromTag))
                 {
-                    if (((string)hosts[i]["azureVmName"]) == matchingEntityAlias)
+                    var httpResponse = await restClient.GetAsync(HostEntityEndoint + "?tag=" + resolveFromTag);
+                    httpResponse.EnsureSuccessStatusCode();
+
+                    var resp = await httpResponse.Content.ReadAsStringAsync();
+                    var hosts = JArray.Parse(resp);
+
+                    for (int i = 0; i < hosts.Count; i++)
                     {
-                        entityID = (string)hosts[i]["entityId"];
-                        return true;
-                    }
-                    else
-                    {
-                        if (hosts[i]["ipAddresses"] != null)
+                        if (((string)hosts[i]["azureVmName"]) == matchingEntityAlias)
                         {
-                            for (int j = 0; j < hosts[i]["ipAddresses"].Count(); j++)
+                            entityID = (string)hosts[i]["entityId"];
+                            return true;
+                        }
+                        else
+                        {
+                            if (hosts[i]["ipAddresses"] != null)
                             {
-                                if (matchingEntity.ipAddresses.Contains((string)hosts[i]["ipAddresses"][j]))
+                                for (int j = 0; j < hosts[i]["ipAddresses"].Count(); j++)
                                 {
-                                    entityID = (string)hosts[i]["entityId"]; ;
-                                    return true;
+                                    if (matchingEntity.ipAddresses.Contains((string)hosts[i]["ipAddresses"][j]))
+                                    {
+                                        entityID = (string)hosts[i]["entityId"]; ;
+                                        return true;
+                                    }
                                 }
                             }
-                        }
 
+                        }
                     }
                 }
                 
