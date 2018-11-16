@@ -1,16 +1,17 @@
-﻿# Monitoring ServiceFabric with Dynatrace and eventflow
+﻿# Monitoring ServiceFabric with Dynatrace and EventFlow
 
 ## Goal 
 The goal is to enrich [Dynatrace](https://www.dynatrace.com) who monitors a Service Fabric Cluster using Dynatrace [OneAgent](https://www.dynatrace.com/support/help/deploy-dynatrace/oneagent/), with ETW events exposed by Service Fabric. 
 
 Since Dynatrace is not aware of the entity model specific for Service Fabric, it recognises the applications, services, processes, hosts by their behaviour / topology concepts that is built-in Dynatrace. E.g. network & process communication, message tracing, matching properties such as VMs part of a VMSS, ...  
 
-### The challenges:
+### The challenges
 * Capture ETW events (OneAgent currently doesn't have a generic ETW listener)
 * Map ETW events to the entities in Dynatrace. 
 * Some events such as e.g. node-events are not necessarily emitted on the node they refer to, which makes mapping even more difficult
 * Entity information in the events do not necessarily match the "logic entitiy name". E.g. nodeName is prepended by a _ following the Azure VM Name (which is not the actual internal hostname detected) 
 * Track/map cluster-wide events and metrics. e.g. cluster health event
+* Dynatrace supports different kind of events (annotations, problems, configuration, .. ), requiring to propagate properties dependend on the type of the event.
 
 ## How-To push ETW events into Dynatrace
 To leverage Service Fabric ETW events within Dynatrace, this project implements a ServiceFabric application using the "EventFlow library suite" to capture the ETW events and generate "Dynatrace-Events" based on the input events. 
@@ -29,6 +30,7 @@ For example:
 * Extract a specific event property such as nodeName and use it as a matching tag to map the event to the related host. 
 
 ![](servicefabric-eventflow.png)
+
 ## Setup
 
 - [Service Fabric](https://azure.microsoft.com/en-us/services/service-fabric/) Cluster to monitor
@@ -38,7 +40,7 @@ For example:
 
 ### The service implementing EventFlow
 
-The service simply initializes eventflow and listens to the cancellation token to gracefully shutdown the service. 
+The service simply initializes EventFlow and listens to the cancellation token to gracefully shutdown the service. 
 
 This is **imporant** as the opened ETW sessions will not be closed properly causing the OS running out of system resources after some process restarts.
 
@@ -93,7 +95,7 @@ Following list describes the necessary tasks to be achieved:
 * Setting up a mapping for events that should directly attach to it's cluster node in Dynatrace
 
 #### Dynatrace Configuration
-To map node-specific events to a Dynatrace host we create an [automatic tag rule](https://www.dynatrace.com/support/help/monitor/tags-and-metadata/tags-and-metadata/how-do-i-define-tags/), that can be used for matching events based on given tags. 
+To map node-specific events to a Dynatrace host we create a [tag rule](https://www.dynatrace.com/support/help/monitor/tags-and-metadata/tags-and-metadata/how-do-i-define-tags/), that can be used for matching events based on given tags. 
 
 The rule is defined as follows: 
 **Create a tag `SFNode` for hosts matching Azure-VM-ScaleSet `<Your-SF-ScaleSet>` with `_`+`{Azure-VM-Name}` as tag value.**
@@ -230,6 +232,6 @@ Here's some basic idea how to get started:
 * Cluster nodes & health (Tagged hosts)
 * Cluster nodes deployed (Node History)
 * General event statistics (Event Statistic)
-* Visualize Node events such as node up/down (Node events)
+* Visualize Node events such as node up/down to see node dynamics (Node events)
 
 
