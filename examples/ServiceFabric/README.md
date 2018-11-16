@@ -17,7 +17,7 @@ To leverage Service Fabric ETW events within Dynatrace, this project implements 
 
 The [EventFlow library suite](https://github.com/Azure/diagnostics-eventflow) allows applications to define what diagnostics data to collect, and where they should be outputted to. 
 
-Dynatrace provides an [output provider for EventFlow](https://github.com/Dynatrace/diagnostics-eventflow/tree/output-dynatrace-0.0.1#dynatrace) to push events and metrics using the Dynatrace [Rest API](https://www.dynatrace.com/support/help/dynatrace-api/). 
+Dynatrace provides an [output provider for EventFlow](https://github.com/Dynatrace/diagnostics-eventflow/tree/output-dynatrace#dynatrace) to push events and metrics using the Dynatrace [Rest API](https://www.dynatrace.com/support/help/dynatrace-api/). 
 
 The provider is also capable define a monitoring entity, that either creates a [Custom Device](https://www.dynatrace.com/support/help/dynatrace-api/environment/topology-and-smartscape-api/topology-smartscape-api-custom-device/) or resolves to another entity defined in Dynatrace. For Service-Fabric we use this to create a custom device that represents the cluster entity to track cluster wide metrics and events. This entity is also the default receiving entity for events that don't match a filter which adjusts the matching rules (See below).  
 
@@ -105,7 +105,7 @@ Matching hosts are then automatically tagged:
 
 #### EventFlow Configuration
 
-EventFlow is configured via a [JSON file](https://github.com/Dynatrace/diagnostics-eventflow/blob/output-dynatrace-examples/examples/ServiceFabric/eventflow/eventFlowConfig.json). To read more about configuration see [readme.md](https://github.com/Dynatrace/diagnostics-eventflow/tree/output-dynatrace-0.0.1)
+EventFlow is configured via a [JSON file](https://github.com/Dynatrace/diagnostics-eventflow/blob/output-dynatrace-examples/examples/ServiceFabric/eventflow/eventFlowConfig.json). To read more about configuration see [readme.md](https://github.com/Dynatrace/diagnostics-eventflow/tree/output-dynatrace)
 
 For authenticating the Dynatrace API you need to replace/set 
 `<Dynatrace API Token>` as well as `<Dynatrace Environment ID>` in the following EventFlow config
