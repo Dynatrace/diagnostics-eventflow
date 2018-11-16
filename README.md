@@ -22,6 +22,7 @@ It runs in the same process as the application, so communication overhead is min
 - [Azure EventHub](#event-hub)
 - [Elasticsearch](#elasticsearch)
 - [OMS (Operations Management Suite)](#oms-operations-management-suite)
+- [Dynatrace](#dynatrace)
 
 The EventFlow suite supports .NET applications and .NET Core applications. It allows diagnostic data to be collected and transferred for applications running in these Azure environments:
 
