@@ -146,7 +146,7 @@ For authenticating the Dynatrace API you need to replace/set
 
   "outputs": [
      {
-      /* Define Dynatrace as input provider */
+      /* Define Dynatrace as output provider */
       "type": "Dynatrace",
       "filters": [
         {
