@@ -168,6 +168,7 @@ For authenticating the Dynatrace API you need to replace/set
           "include": "ID == 18940",
           "eventType": "CUSTOM_CONFIGURATION",
           "configurationProperty": "Message",
+          "descriptionProperty": "ID",
           "tagMatchContext": "CONTEXTLESS",
           "tagMatchEntityType": "HOST",
           "tagMatchKey": "SFNode",
