@@ -119,7 +119,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                         await SendMetric(dtOutputConfiguration.MonitoredEntity.entityAlias, m);
                     }
 
-                    if (tracked)
+                    if (!tracked)
                         this.healthReporter.ReportWarning("Event not tracked");
                     else
                         this.healthReporter.ReportHealthy();
@@ -243,7 +243,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                 }
             }
             
-            if (!await ResolveHostEnity(cfg.MonitoredEntity.resolveFromTag, cfg.MonitoredEntity.entityAlias, dtOutputConfiguration.MonitoredEntity))
+            if (!await ResolveHostEntity(cfg.MonitoredEntity.resolveFromTag, cfg.MonitoredEntity.entityAlias, dtOutputConfiguration.MonitoredEntity))
             {
                 entityID = (await CreateCustomDevice(cfg.MonitoredEntity.entityAlias, dtOutputConfiguration.MonitoredEntity)).entityId;
             }
@@ -383,7 +383,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
         }
 
     
-        private async Task<bool> ResolveHostEnity(string resolveFromTag, string matchingEntityAlias, MonitoredEntity matchingEntity)
+        private async Task<bool> ResolveHostEntity(string resolveFromTag, string matchingEntityAlias, MonitoredEntity matchingEntity)
         {
     
             try
@@ -446,21 +446,6 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                 start = (long)(e.Timestamp.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds,
                 eventType = CustomEventTypes.ANNOTATION,
             };
-           
-            object eventName = null;
-            if (!e.Payload.TryGetValue("EventName", out eventName))
-                eventName = "";
-
-            object eventID = null;
-            if (!e.Payload.TryGetValue("ID", out eventID))
-                eventID = "n/a";
-
-            object eventMsg = null;
-            if (!e.Payload.TryGetValue("Message", out eventMsg))
-                eventMsg = "n/a";
-
-            msg.annotationType = eventName.ToString() + " - " + eventID.ToString();
-            msg.annotationDescription = eventMsg.ToString();
         
             if (metadata != null)
             {
@@ -517,7 +502,32 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                 }
 
             }
-         
+
+            if (msg.eventType == CustomEventTypes.ANNOTATION)
+            {
+                if (string.IsNullOrEmpty(msg.annotationType))
+                {
+                    object eventName = null;
+                    if (!e.Payload.TryGetValue("EventName", out eventName))
+                        eventName = "";
+
+                    object eventID = null;
+                    if (!e.Payload.TryGetValue("ID", out eventID))
+                        eventID = "n/a";
+
+                    msg.annotationType = eventName.ToString() + " - " + eventID.ToString();
+                }
+
+                if (string.IsNullOrEmpty(msg.annotationDescription))
+                {
+                    object eventMsg = null;
+                    if (!e.Payload.TryGetValue("Message", out eventMsg))
+                        eventMsg = "n/a";
+
+                    msg.annotationDescription = eventMsg.ToString();
+                }
+            }
+
             SendEvent(msg);
             tracked = true;
 
@@ -550,7 +560,7 @@ namespace Microsoft.Diagnostics.EventFlow.Outputs
                 }
 
                 httpResponse.EnsureSuccessStatusCode();
-                
+
             }
             catch (Exception ex)
             {
