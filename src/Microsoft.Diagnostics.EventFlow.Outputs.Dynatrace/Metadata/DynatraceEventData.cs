@@ -100,11 +100,11 @@ namespace Microsoft.Diagnostics.EventFlow.Metadata
                 if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
                     meta.DeploymentVersion = val;
             }
-            property = eventMetadata["configuratonProperty"];
+            property = eventMetadata["configurationProperty"];
             if (!string.IsNullOrEmpty(property))
             {
                 if (eventData.GetValueFromPayload<string>(property, (v) => val = v))
-                    meta.DeploymentVersion = val;
+                    meta.Configuration = val;
             }
 
             property = eventMetadata["tagMatchEntityTypeProperty"];
