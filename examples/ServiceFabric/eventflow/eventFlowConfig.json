@@ -1,0 +1,101 @@
+﻿{
+  "healthReporter": {
+    "type": "CsvHealthReporter",
+    "logFileFolder": ".",
+    "logFilePrefix": "HealthReport",
+    "minReportLevel": "Warning",
+    "throttlingPeriodMsec": "1000"
+  },
+  "inputs": [
+   
+    {
+      "type": "ETW",
+      "providers": [
+        {
+          /*ServiceFabric Platform Events*/
+          "providerGuid": "cbd93bc2-71e5-4566-b3a7-595d8eeca6e8",
+          "keywords": "4611686018427387904"
+
+          /*
+          "providerName": "Microsoft-ServiceFabric" //includes all subsequent providers like -Events, -Actors, -Services,
+          */
+
+
+        }
+      ]
+    }
+  ],
+
+  "filters": [
+    {
+      "type": "drop",
+      "include": "Level == Verbose"
+    }
+
+  ],
+
+  "outputs": [
+     {
+
+      "type": "Dynatrace",
+      "filters": [
+
+        /*
+       {
+          "type": "drop",
+          "include": "ProviderName == Microsoft-ServiceFabric && (ID < 18603 || ID > 18605)" 
+       },
+      */
+        {
+          "type": "metadata",
+          "metadata": "dynatrace-event",
+          "include": "ProviderName==Microsoft-ServiceFabric",
+          "source": "eventflow-ETW"
+        },
+        {
+          "type": "metadata",
+          "metadata": "dynatrace-event",
+          "include": "ID == 18940",
+          "eventType": "CUSTOM_CONFIGURATION",
+          "configurationProperty": "Message",
+          "descriptionProperty": "ID",
+          "tagMatchContext": "CONTEXTLESS",
+          "tagMatchEntityType": "HOST",
+          "tagMatchKey": "SFNode",
+          "tagMatchValueProperty": "nodeName"
+        }
+      ],
+
+      "APIToken": "<Dynatrace API Token>",
+      "ServiceBaseAddress": "https://<Dynatrace-Environment-ID>.live.dynatrace.com",
+      "ServiceAPIEndpoint": "/api/",
+
+      "MonitoredEntity": {
+        "entityAlias": "ServiceFabricCluster",
+        "type": "ServiceFabric",
+        "tags": [ "ServiceFabric" ],
+        "configUrl": "https://sfdemo01.westus.cloudapp.azure.com:19080",
+        "favicon": "https://assets.dynatrace.com/global/icons/white/icons_technologies_003_microsoft-azure-fabric.png",
+        "Timeseries": {
+          "timeseriesID": "servicefabric.events",
+          "displayName": "ServiceFabric Events",
+          "unit": "Count",
+          "dimensions": [ "channel", "event" ],
+          "types": [ "ServiceFabric" ]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "maxEventBatchSize": "50"
+  },
+
+  "schema-version": "2016-08-11",
+  "extensions": [
+    {
+      "category": "outputFactory",
+      "type": "Dynatrace",
+      "qualifiedTypeName": "Microsoft.Diagnostics.EventFlow.Outputs.DynatraceOutputFactory,  Microsoft.Diagnostics.EventFlow.Outputs.Dynatrace"
+    }
+  ]
+}
